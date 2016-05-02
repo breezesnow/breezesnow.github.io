@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Piano Music </title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        ul{}
+        li{
+            float: left;
+            height:200px;
+            background: #ccc;
+            width:calc(12.5% - 2px);
+            text-align: center;
+            line-height: 200px;
+            border: 1px solid #000;
+            position: relative;
+            top: 0;
+            transition: 0.2s all ease;
+        }
+        li.on{
+            background: #999;
+            color:#fff;
+            text-shadow: 1px 1px 4px #000;
+            top:2px;
+        }
+    </style>
+    <script src="../js/sound.js"></script>
+    <script>
+        window.onload=function(){
+            var aLi=document.querySelectorAll('ul li');
+
+            document.onkeydown=function(ev){
+                //49 56
+                document.title=ev.keyCode;
+                if(ev.keyCode>=49 && ev.keyCode<=56){
+                    var oA=new Audio();
+                    oA.src=oggSound['sound'+ev.keyCode];
+                    oA.play();
+
+                    aLi[ev.keyCode-49].className='on';
+                }
+            };
+            document.onkeyup=function(){
+                for(var i=0; i<aLi.length; i++){
+                    aLi[i].className='';
+                }
+            };
+
+            //点击
+            for(var i=0; i<aLi.length; i++){
+				
+                (function(index){
+                    aLi[i].onmousedown=function(){
+
+                        this.className='on';
+
+                        var oA=new Audio();
+                        oA.src=oggSound['sound'+(index+49)];
+                        oA.play();
+                    };
+                    aLi[i].onmouseup=function(){
+                        for(var i=0; i<aLi.length; i++){
+                            aLi[i].className='';
+                        }
+                    };
+                })(i);
+            }
+        };
+        document.onmousedown=function(){
+            return false;
+        };
+    </script>
+</head>
+<body>
+<ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>lagou</title>
+<style>
+* { margin:0; padding:0; }
+div { overflow:hidden; position:relative; width:200px; height:200px; border:1px solid #000; float:left; margin:10px; }
+span { position:absolute; top:-200px; left:0; width:100%; height:100%; background:green; opacity:0.3; }
+</style>
+<script src="../js/zxy.js"></script>
+<script>
+window.onload=function (){
+	var aDiv=document.getElementsByTagName('div');
+	
+	for (var i=0; i<aDiv.length; i++)
+	{
+		enter(aDiv[i]);
+		leave(aDiv[i]);
+	}
+	
+	function enter(obj)
+	{
+		obj.onmouseenter=function (ev){
+			var oEvent=ev || event;
+			var n=getN(obj, oEvent);
+			var oSpan=obj.children[0];
+			
+			switch (n)
+			{
+				case 0: // right
+					oSpan.style.left='200px';
+					oSpan.style.top=0;
+					break;
+					
+				case 1: // bottom
+					oSpan.style.left=0;
+					oSpan.style.top='200px';
+					break;
+				
+				case 2: // left
+					oSpan.style.left='-200px';
+					oSpan.style.top=0;
+					break;
+					
+				case 3: // top
+					oSpan.style.left=0;
+					oSpan.style.top='-200px';
+					break;
+			}
+			move(oSpan, {top:0, left:0});
+		};
+	}
+	
+	function leave(obj)
+	{
+		obj.onmouseleave=function (ev){
+			var oEvent=ev || event;
+			var n=getN(obj, oEvent);
+			var oSpan=obj.children[0];
+			
+			switch (n)
+			{
+				case 0: // right
+					move(oSpan, {left:200, top:0});
+					break;
+					
+				case 1: // bottom
+					move(oSpan, {top:200, left:0});
+					break;
+				
+				case 2: // left
+					move(oSpan, {top:0, left:-200});
+					break;
+					
+				case 3: // top
+					move(oSpan, {top:-200, left:0});
+					break;
+			}
+		};
+	}
+	
+	function getN(obj, ev)
+	{
+		var x=obj.offsetLeft+obj.offsetWidth/2-ev.clientX;
+		var y=obj.offsetTop+obj.offsetHeight/2-ev.clientY;
+		
+		var n=Math.round((d2a(Math.atan2(y, x))+180)/90)%4;
+		return n;
+	}
+
+	function d2a(d)
+	{
+		return d*180/Math.PI;
+	}
+};
+</script>
+</head>
+
+<body>
+	<div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div><div>
+		<span></span>
+	</div><div>
+		<span></span>
+	</div><div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div>
+	<div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+    <div>
+		<span></span>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

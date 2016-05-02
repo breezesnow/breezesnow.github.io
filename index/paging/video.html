@@ -1,0 +1,272 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>视频播放器 </title>
+<style>
+	body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input{margin:0;padding:0;border:0;}
+body{font-size:12px; /*font-family:"Microsoft YaHei";*/font-family:Verdana;}
+ul,ol{list-style-type:none;}
+select,img{vertical-align:middle;}
+a{text-decoration:none;}
+
+body{background:url(../images/video/back.jpg) left top repeat;}
+.videoBox{width:1000px; overflow:hidden; margin:0 auto; height:540px; background:url(../images/video/video_bg.jpg) left bottom no-repeat; position:relative; margin-top:40px;}
+.video{width:100%; height:500px; position:relative; background:url(../images/video/zns.png) center 35% no-repeat;}
+.open{width:158px; background:url(../images/video/openFell.png) left top no-repeat; height:42px; position:absolute; top:70%; left:50%; margin-left:-79px; display:none;}
+/*打开文件*/
+.openLink{width:292px;height:32px; background:url(../images/video/openLink.png) left top no-repeat; position:absolute; top:65%; left:50%; margin-left:-146px;}
+.openLink .input{width:188px; margin-left:2px; height:30px; background:transparent; outline:none; padding:0 5px; color:#FFF; float:left; font-family:Verdana;}
+.openBtn{background:#FFF; height:30px; width:90px; background:transparent; float:left;}
+.loading{position:absolute; width:102px; height:108px; left:50%; top:50%; margin-left:-51px; margin-top:-54px;}
+/*列表*/
+.video_list{width:20%; float:left; height:540px; background:#333; position:relative;}
+.listBtnOpen{width:10px; height:58px; position:absolute; right:-10px; background:url(../images/video/listBtn_l.png) left top no-repeat; top:50%; position:absolute; margin-top:-50px; z-index:2;}
+.listBtnOpen:hover{background:url(../images/video/listBtn_l_h.png) left top no-repeat;}
+.listBtnContraction{width:10px; height:58px; position:absolute; right:0; background:url(../images/video/listBtn_r.png) left top no-repeat; top:50%; position:absolute; margin-top:-50px; z-index:2; display:none;}
+.listBtnContraction:hover{background:url(../images/video/listBtn_r_h.png);}
+/*列表内容*/
+.list{overflow:hidden; margin-top:5px;}
+.list dt{height:23px; background:url(../images/video/dtBg.png) left top repeat-x; line-height:23px; color:#CCC;}
+.list dt span{margin-left:10px; line-height:22px;}
+.list dd{line-height:22px;color:#999;padding-left:10px;	overflow:hidden;}
+.list dd a{color:#999; float:left; width:105px;white-space:nowrap;text-overflow:ellipsis; overflow:hidden;}
+.list dd a:hover{color:#FFF;}
+.list dd span{float:right; margin-right:10px;}
+/*播放器*/
+.video_play{float:left; width:80%;}
+/*操作*/
+.videoBar{height:43px; bottom:0; width:100%;}
+.videoBar .play{float:left;}
+.videoBar .play img{float:left;}
+.videoBar .full{float:right;}
+/*进度*/
+.speed{height:6px; border-radius:3px; border:#CCC solid 1px; margin-top:-54px; bottom:45px;margin-left:0.35%; font-family:Verdana; font-size:0; width:99%; position:absolute;}
+.speed_buffer{background:#999; width:55%; height:6px; font-family:Verdana; font-size:0;}
+.speed_this{background:#eee; width:25%; height:6px; font-family:Verdana; font-size:0; margin-top:-6px; position:relative;}
+.volume{width:100px; border:#CCC solid 1px; height:6px; border-radius:3px; margin-top:15px; margin-right:5px; float:right;}
+.volume_this{background:#999; width:45%; height:6px; font-family:Verdana; font-size:0; position:relative;}
+.button{width:12px;height:12px;border-radius:50%;background:#FFF;position:absolute;top:-3px;right:0; cursor:pointer;}
+/*timer*/
+.timer{width:130px; float:left; margin-top:10px; color:#CCC;}
+.timeThis{color:#FFF;}
+
+#video_div { width:100%; height:100%; left:0; top:0; position:absolute; background:black; display:none;}
+#video_div video {position:absolute; width:90%; height:90%; left:5%; top:5%;}
+</style>
+<script>
+	window.onload=function(){
+		var oV=document.getElementById('v1');
+		var oPlay=document.getElementById('play');
+		var oPause=document.getElementById('pause');
+		var oStop=document.getElementById('stop');
+		var oCurrentTime=document.getElementById('curTime');
+		var oTotalTime=document.getElementById('totalTime');
+		var oLastPB=document.querySelector('.last_play_btn');
+
+		//取
+		var playTime=localStorage.getItem('play_time');
+		if(playTime){
+			oLastPB.style.display='block';
+
+			oLastPB.onclick=function(){
+				var t=confirm('是否从上一次那个位置开始播放？');
+				if(t){
+					oV.currentTime=playTime;
+					fnPlay();
+				}else{
+					oV.currentTime=0;
+					fnPlay();
+				}
+			};
+		}
+
+
+		var fnPlay=function(){
+			oV.play();
+			oPlay.style.display='none';
+			oPause.style.display='block';
+		};
+		var fnPause=function(){
+			oV.pause();
+			oPlay.style.display='block';
+			oPause.style.display='none';
+		};
+
+		//1. 播放、暂停、停止
+		oPlay.onclick=function(){
+			fnPlay();
+		};
+		oPause.onclick=function(){
+			fnPause();
+		};
+		oStop.onclick=function(){
+			fnPause();
+			oV.currentTime=0;
+		};
+
+		//2 播放进度
+		var oSpeedThis=document.querySelector('.speed_this');
+		var oButton=oSpeedThis.children[0];
+		var oSpeed=document.querySelector('.speed');
+
+		oV.ontimeupdate=function(){
+			var scale=oV.currentTime/oV.duration;
+			oSpeedThis.style.width=scale*100+'%';
+
+			oCurrentTime.innerHTML=parseInt(oV.currentTime/60)+':'+parseInt(oV.currentTime%60);
+
+			//存储
+			localStorage.setItem('play_time',oV.currentTime);
+		};
+
+		oButton.onmousedown=function(ev){
+			var disX=ev.clientX-this.offsetLeft-this.offsetWidth;
+			document.onmousemove=function(ev){
+				var l=ev.clientX-disX;
+
+				var scale=l/oSpeed.offsetWidth;
+
+				scale<=0 && (scale=0);
+				scale>=1 && (scale=1);
+				oSpeedThis.style.width=scale*100+'%';
+
+				oV.currentTime=oV.duration*scale;
+			};
+			document.onmouseup=function(){
+				document.onmousemove=null;
+				document.onmouseup=null;
+
+				fnPlay();
+			};
+			return false;
+		};
+		//点击调整进度
+		oSpeed.onclick=function(ev){
+			var l=ev.clientX-oSpeed.getBoundingClientRect().left;
+			var scale=l/oSpeed.offsetWidth;
+
+			oV.currentTime=oV.duration*scale;
+
+			fnPlay();
+		};
+
+		//3. 缓冲进度
+		var oSpeedBuffer=document.querySelector('.speed_buffer');
+
+		oV.onprogress=function(){
+			var scale=oV.buffered.end(0)/oV.duration;
+
+			oSpeedBuffer.style.width=scale*100+'%';
+
+			//总时间
+			oTotalTime.innerHTML=parseInt(oV.duration/60)+':'+parseInt(oV.duration%60);
+		};
+
+		//音量
+		var oImg=document.querySelector('.full img');
+
+		var bM=true;
+		oImg.onclick=function(){
+			if(bM){
+				oV.muted=true;
+				this.style.background='red';
+			}else{
+				oV.muted=false;
+				this.style.background='';
+			}
+			bM=!bM;
+		};
+
+		(function(){
+			var oVolumeThis=document.querySelector('.volume_this');
+			var oVolume=document.querySelector('.volume');
+			var oBtn=document.querySelector('.volume_this .button');
+			oBtn.onmousedown=function(ev){
+				var disX=ev.clientX-this.offsetLeft-this.offsetWidth;
+
+				document.onmousemove=function(ev){
+					var l=ev.clientX-disX;
+					var scale=l/oVolume.offsetWidth;
+					scale<=0 && (scale=0);
+					scale>=1 && (scale=1);
+
+					oVolumeThis.style.width=scale*100+'%';
+
+					oV.volume=scale;
+				};
+				document.onmouseup=function(){
+					document.onmousemove=null;
+					document.onmouseup=null;
+				};
+				return false;
+			};
+		})();
+
+		//其他
+		oV.onended=function(){
+			//alert('over');
+		};
+		oV.oncanplay=function(){
+			//alert('canplay');
+		};
+	};
+</script>
+</head>
+
+<body>
+<a href="javascript:;" class="last_play_btn" style="display: none;">是否从上一次位置播放</a>
+<div class="videoBox">
+	<div class="video_list" style="width:0%;">
+    	<dl class="list">
+        	<dt><span>播放列表</span></dt>
+        	<dd><a href="#">影片剪辑</a><span>20分15秒</span></dd>
+        </dl>
+        <a href="javascript:;" class="listBtnContraction">&nbsp;</a>
+        <a href="javascript:;" class="listBtnOpen">&nbsp;</a>
+    </div>
+    <div class="video_play" style="width:100%;">
+    	<div class="video">
+			<div id="video_open_div" style="display:none;">
+				<img src="../images/video/loading.png" class="loading" alt="" style="display:none;" />
+				<input type="button" class="open" value="" />
+				<div class="openLink">
+					<input type="text" value="" class="input" />
+					<input type="button" value="" class="openBtn" />
+				</div>
+			</div>
+			<div id="video_div" style="display:block;">
+				<video id="v1" width="100%" height="100%" src="http://images.sohu.com/ytv/SH/Coke/64036020120714021103.mp4"></video>
+			</div>
+        </div>
+        <div class="videoBar">
+        	<!--播放 暂停 等操作部分-->
+            <div class="play">
+                <img id="stop" src="../images/video/stop.png" alt="暂停" />
+				<img id="prev" src="../images/video/prev.jpg" alt="上一个" />
+				<img id="play" src="../images/video/play.jpg" alt="开始" />
+				<img id="pause" src="../images/video/pause.jpg" alt="" style="display:none;" />
+				<img id="next" src="../images/video/next.jpg" alt="" />
+            </div>
+            <!--声音-->
+            <div class="full">
+            	<div class="timer">
+                	<span class="timeThis" id="curTime">00:00</span>/<span id="totalTime">00:00</span>
+                </div>
+                
+                <div class="volume">
+                    <div class="volume_this" style="width:100%;"><div class="button"></div></div>
+                </div>
+                <img src="../images/video/horn.png" style="float:right; margin-top:13px; margin-right:10px;" />
+            </div>
+        </div>
+        <!--进度条-->
+        <div class="speed">
+            <div class="speed_buffer" style="width:0%;"></div>
+            <div class="speed_this" style="width:0%;"><div class="button"></div></div>
+        </div>
+    </div>
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>超酷数码钟表</title>
+
+<style>
+* { padding: 0; margin: 0; }
+li { list-style: none; }
+body { background:url(../images/clock/back.jpg); }
+img { border: none; }
+.date { width: 520px; height: 520px; margin: 50px auto 0; position: relative; }
+.date h2 { text-align: center; padding: 80px 0 30px; }
+.year { text-align: center; padding-top: 30px; }
+.time { text-align: center; padding: 30px 0; }
+.url { text-align: center; position: absolute; bottom: 40px; left: 160px; }
+.date img { position: relative; }
+.pos2 { margin-left: 10px; }
+.num { width: 25px; }
+.num2 { width: 38px; }
+</style>
+<script>
+window.onload=function (){
+	tick();
+	setInterval(tick, 1000);
+	function tick()
+	{
+		var oDate=new Date();
+		var year=oDate.getFullYear();
+		var month=oDate.getMonth();
+		var date=oDate.getDate();
+		var h=oDate.getHours();
+		var m=oDate.getMinutes();
+		var s=oDate.getSeconds();
+		var week=oDate.getDay();
+		
+		var str='-'+year+'-'+toDub(month+1)+'-'+toDub(date)+'-'+toDub(h)+'-'+toDub(m)+'-'+toDub(s)+'-'+week+'-';
+		
+		var aImg=document.getElementsByTagName('img');
+		var arr=['seven', 'one', 'two', 'three', 'four', 'five', 'six'];
+		
+		for (var i=0; i<str.length; i++)
+		{
+			if (str.charAt(i) == '-')
+			{
+				continue;
+			}
+			
+			if (i == str.length-2)
+			{
+				var sName=arr[str.charAt(i)];
+				aImg[i].src='../images/clock/'+sName+'.png';
+			}
+			else
+			{
+				aImg[i].src='../images/clock/'+str.charAt(i)+'.png';
+			}
+			
+		}
+	}
+	
+	function toDub(n)
+	{
+		return n<10 ? '0'+n : ''+n;
+	}
+};
+</script>
+</head>
+
+<body>
+
+<div id="clock" class="date">
+    <h2><img src="../images/clock/title.png" /></h2>
+    <div class="year">
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img src="../images/clock/year.png" alt="year" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img src="../images/clock/month.png" alt="month" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img src="../images/clock/seven.png" alt="seven" />
+    </div>
+    <div class="time">
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img src="../images/clock/sign.png" alt="sign" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img src="../images/clock/sign.png" alt="sign" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="num" src="../images/clock/0.png" alt="0" />
+        <img class="pos2" src="../images/clock/week.png" alt="week" />
+        <img class="num2" src="../images/clock/one.png" alt="one" />
+    </div>
+</div>
+
+</body>
+</html>

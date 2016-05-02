@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link rel="stylesheet" href="../css/bace.css"/>
+<style>
+body{background:url(../images/count%20down/body.gif);}
+div{width:600px;height:660px;margin:2px auto;background:url(../images/count%20down/16sucai_bg.jpg) no-repeat center;position:relative;}
+input{text-align:center;}
+span{position:absolute;top:108px;font-size:18px;color:#fff;line-height:20px;font-weight:bold;}
+span.botton{width:150px;height:150px;left:237px;top:155px;background:url(../images/count%20down/btn_hover.jpg);}
+span.space{left:140px;}
+input.year{width:60px;height:20px; border-radius:10px;position:absolute;left:196px;top:108px; outline:none;padding:0 10px;}
+span.year{left:284px;}
+input.month{width:40px;height:20px;border-radius:10px;position:absolute;left:304px;top:108px; outline:none;padding:0 10px;}
+span.month{left:371px;}
+input.date{width:40px;height:20px;border-radius:10px;position:absolute;left:390px;top:108px; outline:none;padding:0 10px;}
+span.date{left:456px;}
+span.have{left:58px;top:380px;font-size:28px;line-height:24px;}
+b{position:absolute;top:408px;font-size:30px;line-height:30px;color:#FFF;}
+b.d{right:434px;}
+b.h{right:330px;}
+b.m{right:192px;}
+b.s{right:90px;}
+</style>
+<script src="../js/zxy.js"></script>
+<script>
+domready(function(){
+	var oBotton	=byId('botton');
+	var oYear=byId('year');
+	var oMonth=byId('month');
+	var oDay=byId('date');
+	var oD=byId('d');
+	var oH=byId('h');
+	var oM=byId('m');
+	var oS=byId('s');
+	var timer=null;
+	oBotton.onclick=function(){
+		
+		if(oYear.value){
+			if(!oD.innerHTML){
+				this.style.opacity='0';
+				var y=oYear.value;
+				var m=oMonth.value-1;
+				var d=oDay.value;
+				tick();
+				timer=setInterval(tick, 1000);
+				function tick()
+			{
+				// 目标时间
+				var oDate=new Date();
+				oDate.setFullYear(y,m,d);
+				oDate.setHours(0, 0, 0, 0);
+				
+				// 当期时间
+				var oNow=new Date();
+				
+				// 总秒数
+				var total=parseInt((oDate.getTime()-oNow.getTime())/1000);
+			
+				// 算时间
+				oD.innerHTML=parseInt(total/86400);
+				total%=86400;
+				
+				oH.innerHTML=parseInt(total/3600);
+				total%=3600;
+				
+				oM.innerHTML=parseInt(total/60);
+				total%=60;
+				
+				oS.innerHTML=total;
+			}
+			
+			}else{
+				clearInterval(timer)
+				this.style.opacity='1';
+				var aInp=byTag(document,'input');
+				for(var i=0;i<aInp.length;i++)aInp[i].value='';
+				var aB=byTag(document,'b');
+				for(var i=0;i<aB.length;i++)aB[i].innerHTML='';
+			}
+		}
+	}
+})
+</script>
+</head>
+
+<body>
+	<div>
+    	<span class="space">距离：</span>
+    	<input type="text" class="year" id="year"/><span class="year">年</span>
+        <input type="text" class="month" id="month"/><span class="month">月</span>
+        <input type="text" class="date" id="date"/><span class="date">日</span>
+    	<span class="botton" id="botton"></span>
+        <span class="have">还有：</span>
+        <b class="d" id="d"></b>
+        <b class="h" id="h"></b>
+        <b class="m" id="m"></b>
+        <b class="s" id="s"></b>
+    </div>
+</body>
+</html>

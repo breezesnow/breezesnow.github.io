@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+*{margin:0;padding:0;}
+body{font-size:12px;font-family:'Microsoft YaHei';line-height: 100%;background:#CCC;}
+a{color:#000;text-decoration:none;}
+h1,h2,h3,h4,h5,h6,strong,b{font-weight:normal;}
+ul,dl,li,ol,dt,dd{list-style:none;}
+img{ vertical-align:top;}
+a img{display:block;border:none;}
+i,em{font-style:normal;}
+.clearfix:after{display:block;clear:both;content:""}
+.clearfix{zoom:1}
+.nav{position:absolute;width:100%;height:60px;background:#999;top:0;left:0;z-index:10;}
+.nav dl{width:1000px;height:60px;margin:0 auto;background:#999;}
+.nav a{color:#424242;}
+.nav .active a{color:#000;font-weight:bold;font-size:14px;}
+/*.nav dl span a:hover{color:#000;font-weight:bold;}*/
+.nav dl dt{float:left;height:52px;padding:4px;margin-left:8px;}
+.nav dl dt div{width:52px;height:52px;background:url(../images/about%20me/head%20portroit.gif); border-radius:50%;background-size:100%;}
+.nav dl dt span{width:100%;text-align:center;line-height:25px;height:25px;float:left;}
+.nav dl dt b{width:100%;border-top:2px solid #000;float:left}
+.nav dl dd{float:right;height:60px;}
+.nav dl dd li{float:left;width:80px;line-height:60px;text-align:center;}
+.box{width:1000px;margin:0 auto;}
+.box>li{width:100%;height:600px;position:relative;padding-top:60px;display:none;}
+.box .active{display:block;text-align:center;}
+.box1 b{position:absolute;width:200px;height:200px; border-radius:50%;background:#FFF;left:400px;top:80px;z-index:2;opacity:0;}
+.box1{width:100%;height:100%;position:relative;}
+.box1 img{position:absolute;left:50%;;margin-left:-100px;top:80px; }
+.box1 div{position:absolute;top:300px;font-size:16px;color:#666;width:100%;text-align:center;line-height:30px;}
+.box1 div strong{border-bottom:2px solid #999;display:block;width:100%;}
+.box2{width:100%;padding-top:20px;line-height:24px;}
+.box2 h3{width:150px;line-height:30px;font-size:18px;margin:0 auto;border-bottom:#666 2px solid; font-weight:bold;}
+.box2>p{font-weight:bold;color:#121212;}
+.box2>ul{width:800px;height:210px; border-radius:20px;border:2px solid #666;margin:30px auto;}
+.box2>ul li{float:left;width:25%;height:100%;background:url(../images/about%20me/line.PNG) no-repeat center 130px ;}
+.box2 div{width:88px;height:88px;margin:20px auto;background:url(../images/about%20me/icon.png) no-repeat;border-radius:50%}
+.icon1 div{background-position:-88px 0;}
+.icon2 div{background-position:-176px 0;}
+.icon3 div{background-position:-264px 0;}
+.box2>ul p{width:100px;height:30px;margin-left:30px}
+.box2 .right{text-align:right;}
+.box3{width:760px;height:180px;margin:0 auto;position:relative;padding:10px 20px;}
+.box3 span{position:absolute;left:0;top:0;width:50px;height:50px;border-left:#030 2px solid;border-top:2px solid #030;}
+.box3 i{position:absolute;right:0;bottom:0;width:50px;height:50px;border-right:#030 2px solid;border-bottom:2px solid #030;}
+.box3 p{line-height:30px;font-size:14px;}
+.box4{border-top:2px solid #F00;}
+.box4 p{font-size:18px;line-height:30px;}
+.box4 p a{color:#00F;} 
+.des{width:100%;height:100px;line-height:100px;}
+.skill{width:100%;height:400px;padding-top:20px;}
+.skill dt{width:5%;height:100%;float:left;}
+.skill dd{width:30%;height:100%;float:left;position:relative;}
+.skill img{margin:20px auto;transition: 1s all ease;}
+.skill dd>p{font-weight:bold;padding-top:10px;}
+.skill dd>div{display:none;}
+.skill i{display:block;width:20px;height:20px;background:url(../images/about%20me/skill_flag.png);margin:20px auto;transition: 1s all ease;}
+.skill .active i{transform:rotate(180deg);}
+.skill img.active{transform:scale(1.2);}
+.skill .active div{width:220px;height:120px;padding:20px; border-radius:10px;background:#9B9B9B;margin:0 auto;line-height:30px;display:block;}
+ @keyframes go {to{left:-880px;}}
+.dome{width:880px;height:240px;margin:40px auto;overflow:hidden;position:relative;}
+.dome>ul{width:1760px;height:240px;position:absolute;left:0;top:0;}
+.dome li{width:200px;height:200px;float:left;padding:10px;position:relative;}
+.dome li a{position:absolute;width:90%;height:90%;left:10px;top:10px;border:1px solid #F00;}
+.dome li a img{width:200px;}
+.move{animation-name: go;animation-duration: 5s;animation-timing-function: linear;animation-iteration-count: infinite;}
+.move:hover{animation-play-state: paused;}
+
+
+
+
+
+
+
+
+

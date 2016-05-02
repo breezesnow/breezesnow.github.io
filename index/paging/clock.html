@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>clock</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+		body{background:#666;}
+        .clock{
+            width:300px;
+            height:300px;
+            background: -webkit-radial-gradient(center center,circle, #eee,#666);
+            background-size: cover;
+            border-radius: 50%;
+            position: absolute;
+            left: 500px;
+            top: 180px;
+            border: 1px solid #000;
+            box-shadow: 0px 0px 4px #000;
+        }
+        .cap{
+            width: 20px;
+            height: 20px;
+            background: -webkit-radial-gradient(center center,circle,#ccc,#000);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+        }
+        .hour{
+            width:14px;
+            height:80px;
+            background: #000;
+            position: absolute;
+            left: 50%;
+            margin-left: -7px;
+            top: 50%;
+            margin-top: -80px;
+            border-radius: 50% 50% 0 0;
+
+            transform-origin: center bottom;
+
+
+        }
+        .min{
+            width:10px;
+            height:100px;
+            background: #000;
+
+            position: absolute;
+            left: 50%;
+            margin-left: -5px;
+            top: 50%;
+            margin-top: -100px;
+            border-radius: 50% 50% 0 0;
+
+            transform-origin: center bottom;
+
+        }
+        .sec{
+            width:4px;
+            height:120px;
+            background: #f00;
+
+            position: absolute;
+            left: 50%;
+            margin-left: -2px;
+            top: 50%;
+            margin-top: -120px;
+            border-radius: 50% 50% 0 0;
+
+            transform-origin: center bottom;
+        }
+        .scale{
+            width:2px;
+            height:10px;
+            background: #000;
+            position: absolute;
+            left: 50%;
+            margin-left: -1px;
+            transform-origin: center 150px;
+        }
+        .bs{
+            width:4px;
+            height:14px;
+            background: #000;
+            position: absolute;
+            left: 50%;
+            margin-left: -2px;
+            transform-origin: center 150px;
+        }
+        .bs strong{
+            margin-top: 20px;
+            position: absolute;
+            font-size: 24px;
+            width:100px;
+            text-align: center;
+            left: 50%;
+            margin-left: -50px;
+            text-shadow: 1px 1px 3px #000;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var oDiv=document.querySelector('.clock');
+
+            var oH=document.querySelector('.clock .hour');
+            var oM=document.querySelector('.clock .min');
+            var oS=document.querySelector('.clock .sec');
+
+            //画刻度
+            var N=60;
+            for(var i=0; i<N; i++){
+                var oSpan=document.createElement('span');
+
+                if(i%5==0){
+                    oSpan.className='bs';
+
+                    var n=i/5==0?12:i/5;
+
+                    oSpan.innerHTML='<strong>'+n+'</strong>';
+                    oSpan.children[0].style.transform='rotate('+-i*6+'deg)';
+                }else{
+                    oSpan.className='scale';
+                }
+
+                oSpan.style.transform='rotate('+6*i+'deg)';
+                oDiv.appendChild(oSpan);
+            }
+
+            function tick(){
+                var oDate=new Date();
+                var h=oDate.getHours();
+                var m=oDate.getMinutes();
+                var s=oDate.getSeconds();
+                var ms=oDate.getMilliseconds();
+
+                oH.style.transform='rotate('+(h*30+m/60*30)+'deg)';
+                oM.style.transform='rotate('+(m*6+s/60*6)+'deg)';
+                oS.style.transform='rotate('+(s*6+ms/1000*6)+'deg)';
+            }
+            tick();
+            setInterval(tick,30);
+
+            //以下拖拽
+            var iSpeedX=0;
+            var iSpeedY=0;
+
+            var lastX=0;
+            var lastY=0;
+
+            var timer=null;
+
+            oDiv.onmousedown=function(ev){
+                var oEvent=ev || event;
+                var disX=oEvent.clientX-oDiv.offsetLeft;
+                var disY=oEvent.clientY-oDiv.offsetTop;
+
+                clearInterval(timer);
+
+                document.onmousemove=function(ev){
+                    var oEvent=ev || event;
+                    oDiv.style.left=oEvent.clientX-disX+'px';
+                    oDiv.style.top=oEvent.clientY-disY+'px';
+
+                    //计算速度
+                    iSpeedX=oEvent.clientX-lastX;
+                    iSpeedY=oEvent.clientY-lastY;
+
+                    lastX=oEvent.clientX;
+                    lastY=oEvent.clientY;
+                };
+
+                document.onmouseup=function(){
+                    document.onmousemove=null;
+                    document.onmouseup=null;
+
+                    duangMove();
+                };
+                return false;
+            };
+
+            function duangMove(){
+                timer=setInterval(function(){
+                    iSpeedY+=3;
+
+                    var l=oDiv.offsetLeft+iSpeedX;
+                    var t=oDiv.offsetTop+iSpeedY;
+
+                    if(t>=document.documentElement.clientHeight-oDiv.offsetHeight){
+                        t=document.documentElement.clientHeight-oDiv.offsetHeight;
+                        iSpeedY*=-0.8;
+                        iSpeedX*=0.8;
+                    }
+                    if(t<=0){
+                        t=0;
+                        iSpeedY*=-0.8;
+                        iSpeedX*=0.8;
+                    }
+                    if(l>=document.documentElement.clientWidth-oDiv.offsetWidth){
+                        l=document.documentElement.clientWidth-oDiv.offsetWidth;
+                        iSpeedX*=-0.8;
+                        iSpeedY*=0.8;
+                    }
+                    if(l<=0){
+                        l=0;
+                        iSpeedX*=-0.8;
+                        iSpeedY*=0.8;
+                    }
+
+                    oDiv.style.left=l+'px';
+                    oDiv.style.top=t+'px';
+
+                    if(Math.abs(iSpeedX)<1)iSpeedX=0;
+                    if(Math.abs(iSpeedY)<1)iSpeedY=0;
+
+                    if(iSpeedX==0 && iSpeedY==0 && t==document.documentElement.clientHeight-oDiv.offsetHeight){
+                        clearInterval(timer);
+                    }
+                },30);
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="clock">
+        <div class="hour"></div>
+        <div class="min"></div>
+        <div class="sec"></div>
+        <div class="cap"></div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
